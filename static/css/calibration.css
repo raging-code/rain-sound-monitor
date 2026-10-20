@@ -1,0 +1,110 @@
+/* Calibration panel */
+.calibration h2 {
+  margin-bottom: 8px;
+  font-size: 1.25rem;
+}
+
+.cal-intro {
+  margin: 0 0 20px;
+  color: var(--slate);
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.cal-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px 28px;
+  border-radius: 28px;
+  background: var(--sound-idle);
+  color: var(--ink);
+}
+
+#cal-rain {
+  background: var(--rain-idle);
+}
+
+.cal-card h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.cal-card p {
+  margin: 0;
+}
+
+.cal-help {
+  color: var(--slate);
+}
+
+.cal-progress {
+  height: 8px;
+  border-radius: 99px;
+  background: rgba(22, 34, 43, 0.14);
+  overflow: hidden;
+}
+
+.cal-bar {
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--ink);
+  transition: width 0.3s linear;
+}
+
+.cal-status {
+  min-height: 1.5em;
+  font-weight: 600;
+}
+
+.cal-card[data-state="done"] .cal-status {
+  color: #1d6b47;
+}
+
+.cal-card[data-state="failed"] .cal-status {
+  color: #a12d2d;
+}
+
+.cal-saved {
+  color: var(--slate);
+  font-variant-numeric: tabular-nums;
+}
+
+.cal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.cal-card button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.cal-card button:disabled:hover {
+  background: transparent;
+  color: var(--ink);
+}
+
+.cal-levels {
+  margin: 16px 0 0;
+  color: var(--slate);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 760px) {
+  .cal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cal-card {
+    padding: 22px;
+  }
+}

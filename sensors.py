@@ -134,6 +134,9 @@ class MockSensors:
 
                 "moisture": _clamp(self._moisture),
 
+                "sound_swing": _clamp(self._level) / 100.0 * config.SOUND_FULL_SCALE,
+                "rain_raw": config.RAIN_DRY_RAW
+                - _clamp(self._moisture) / 100.0 * (config.RAIN_DRY_RAW - config.RAIN_WET_RAW),
                 "errors": {},
 
             }
@@ -483,6 +486,7 @@ class HardwareSensors:
         raw = self.read_raw()
 
         sound_level = None
+        sound_swing = None
 
         moisture = None
 
@@ -505,6 +509,7 @@ class HardwareSensors:
                 self._errors.pop("adc", None)
 
             sound_level = _clamp((high - low) / config.SOUND_FULL_SCALE * 100.0)
+            sound_swing = high - low
 
         if raw["rain_raw"] is not None:
 
@@ -515,6 +520,8 @@ class HardwareSensors:
         return {
 
             "sound_level": sound_level,
+            "sound_swing": sound_swing,
+            "rain_raw": raw["rain_raw"],
 
             "sound_do": raw["sound_do"],
 

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Environment monitor</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/calibration.css') }}">
 </head>
 <body>
   <header class="top">
@@ -103,9 +104,41 @@
         <p class="empty" id="events-empty">Nothing yet</p>
       </div>
     </section>
+
+    <section class="calibration" aria-label="Calibration">
+      <h2>Calibration</h2>
+      <p class="cal-intro">Each calibration records for <span id="cal-seconds">10</span> seconds, ignores sudden spikes and saves the average. It is kept after a restart.</p>
+      <div class="cal-grid">
+        <div class="cal-card" id="cal-sound" data-state="idle">
+          <h3>Sound: quiet level</h3>
+          <p class="cal-help">Keep the room quiet, then press the button. The average background noise becomes 0 %.</p>
+          <div class="cal-progress" hidden><div class="cal-bar"></div></div>
+          <p class="cal-status" role="status" aria-live="polite"></p>
+          <p class="cal-saved"></p>
+          <div class="cal-actions">
+            <button type="button" data-cal-start>Calibrate sound</button>
+            <button type="button" data-cal-reset>Reset</button>
+          </div>
+        </div>
+
+        <div class="cal-card" id="cal-rain" data-state="idle">
+          <h3>Rain: dry level</h3>
+          <p class="cal-help">Wipe the pad completely dry, then press the button. The average dry reading becomes 0 % moisture.</p>
+          <div class="cal-progress" hidden><div class="cal-bar"></div></div>
+          <p class="cal-status" role="status" aria-live="polite"></p>
+          <p class="cal-saved"></p>
+          <div class="cal-actions">
+            <button type="button" data-cal-start>Calibrate rain</button>
+            <button type="button" data-cal-reset>Reset</button>
+          </div>
+        </div>
+      </div>
+      <p class="cal-levels" id="cal-levels"></p>
+    </section>
   </main>
 
   <script src="{{ url_for('static', filename='js/chart.umd.js') }}"></script>
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/calibration.js') }}"></script>
 </body>
 </html>

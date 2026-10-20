@@ -79,6 +79,21 @@ def api_settings():
     return jsonify(settings)
 
 
+@app.get("/api/calibration")
+def api_calibration():
+    return jsonify(monitor.calibration_status())
+
+
+@app.post("/api/calibrate/<kind>")
+def api_calibrate(kind):
+    payload = request.get_json(silent=True) or {}
+    try:
+        status = monitor.calibration_command(kind, payload.get("action", "start"))
+    except ValueError as exc:
+        return jsonify(error=str(exc)), 400
+    return jsonify(status)
+
+
 @app.post("/api/buzzer/test")
 def api_buzzer_test():
     monitor.test_buzzer()

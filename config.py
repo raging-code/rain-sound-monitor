@@ -73,11 +73,30 @@ BUZZER_TEST_S = 0.5            # length of the "Test buzzer" beep
 
 ADC_FAULT_LIMIT = 10           # this many dead ADC readings in a row -> "ADC not responding"
 
+# --------------------------------------------------------------------------
+# Calibration buttons on the web page
+# --------------------------------------------------------------------------
+CALIBRATION_SECONDS = 10       # how long each calibration records
+CALIBRATION_MIN_SAMPLES = 20   # fewer readings than this -> the calibration fails
+CALIBRATION_MAX_DISCARD = 0.4  # more than 40 % of readings were spikes -> "too unstable"
+SOUND_CAL_TOLERANCE = 4        # ADC counts: readings further than this from the median are spikes
+RAIN_CAL_TOLERANCE = 6         # (the real limit is the larger of this and 3 x the normal spread)
+RAIN_MIN_SPAN = 100            # the dry reading must be at least this far above RAIN_WET_RAW
+
+# Rain levels by moisture percent (0 % = calibrated dry level, 100 % = RAIN_WET_RAW).
+# Each entry is (name, percent where that level starts). Keep them in ascending order.
+RAIN_LEVELS = (("drizzle", 10), ("rain", 35), ("heavy", 65))
+RAIN_LEVEL_HYSTERESIS = 4      # percent a reading must fall below a level before it drops back
+
 # Defaults for the controls on the web page (saved in the database once changed)
 DEFAULT_SETTINGS = {
     "alerts_enabled": True,    # buzzer on/off
     "sound_threshold": 40,     # 1-99, percent
     "led_mode": "auto",        # "auto", "on" or "off"
+    "sound_baseline": 0.0,        # saved by "Calibrate sound" (ADC counts, 0 = not calibrated)
+    "sound_calibrated_at": None,
+    "rain_dry_raw": None,          # saved by "Calibrate rain" (None = use RAIN_DRY_RAW)
+    "rain_calibrated_at": None,
 }
 
 # Stored history

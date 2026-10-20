@@ -154,3 +154,15 @@ The complementary activity (adding temperature or humidity sensors) is not inclu
 A microphone signal swings up and down quickly, so a single ADC reading says very little. The app takes many readings over 50 milliseconds, measures the difference between the highest and lowest (peak-to-peak), and converts it to 0-100. That is why a clap gives a clear spike while a steady background hum stays low.
 #   r a i n - s o u n d - m o n i t o r  
  
+
+
+## 9. Calibration buttons
+
+The **Calibration** section at the bottom of the dashboard has two buttons.
+
+- **Calibrate sound**: keep the room quiet and press it. It records for 10 seconds, throws away spikes (claps, bumps) and saves the average background noise as the quiet level. After that, the quiet room reads 0 %.
+- **Calibrate rain**: wipe the pad completely dry and press it. It records for 10 seconds, throws away spikes and saves the average dry reading. Moisture is then 0 % at that dry level and 100 % at RAIN_WET_RAW.
+
+Rain is shown as Dry, Drizzle, Raining or Heavy rain. The moisture percentage where each level starts is set by RAIN_LEVELS in config.py (default 10 %, 35 % and 65 %).
+
+If a calibration fails (room too loud, pad wet, readings unstable) nothing is saved and the page says why. **Reset** goes back to the defaults in config.py. The saved values survive a restart.

@@ -123,10 +123,17 @@
     }
 
     // Rain panel
-    const rainState = !rain.online ? "offline" : rain.detected ? "alert" : "idle";
+    const rainState = !rain.online
+      ? "offline"
+      : rain.detected || (rain.level && rain.level !== "dry")
+        ? "alert"
+        : "idle";
     el.rainPanel.dataset.state = rainState;
     el.rainState.textContent =
-      rainState === "offline" ? "Offline" : rainState === "alert" ? "Raining" : "Dry";
+      rainState === "offline"
+        ? "Offline"
+        : { dry: "Dry", drizzle: "Drizzle", rain: "Raining", heavy: "Heavy rain" }[rain.level] ||
+          (rainState === "alert" ? "Raining" : "Dry");
     el.rainMoisture.textContent =
       rain.moisture == null ? "\u00a0" : "Moisture " + Math.round(rain.moisture) + "%";
     el.rainFill.style.width = clampPct(rain.moisture) + "%";

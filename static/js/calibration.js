@@ -70,6 +70,7 @@
 
   function render(status) {
     running = status.running;
+    renderSensitivity(status.sound);
     if (secondsNote) secondsNote.textContent = String(Math.round(status.seconds));
 
     ["sound", "rain"].forEach((kind) => {
@@ -138,6 +139,79 @@
       send(kind, "reset");
     });
   });
+
+  // ---- Sound sensitivity: how easily a sound counts as loud ----------
+  const sens = {
+    card: document.getElementById("cal-sensitivity"),
+    slider: document.getElementById("sensitivity"),
+    out: document.getElementById("sensitivity-out"),
+    note: document.getElementById("sens-note"),
+    status: document.getElementById("sens-status"),
+    reset: document.getElementById("sens-reset"),
+  };
+  const SENS_GRACE_MS = 2000;
+  let sensHolding = false;
+  let sensTouched = 0;
+  let sensDefault = 50;
+
+  function renderSensitivity(data) {
+    if (!sens.slider || !data || data.sensitivity == null) return;
+    sensDefault = data.default_sensitivity || 50;
+    // Do not move the slider while the person is using it.
+    if (!sensHolding && Date.now() - sensTouched > SENS_GRACE_MS) {
+      sens.slider.value = data.sensitivity;
+      sens.out.textContent = String(data.sensitivity);
+    }
+    sens.reset.disabled = data.sensitivity === sensDefault && !sensHolding;
+    sens.note.textContent =
+      "A sound counts as loud from a swing of about " + Math.round(data.loud_swing) +
+      ". A swing of " + Math.round(data.full_scale) + " reads 100 %.";
+  }
+
+  async function saveSensitivity(value) {
+    sensTouched = Date.now();
+    try {
+      await request("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sound_sensitivity: value }),
+      });
+      sens.card.dataset.state = "done";
+      sens.status.textContent = "Saved.";
+    } catch (err) {
+      sensTouched = 0; // let the next refresh show what the server really has
+      sens.card.dataset.state = "failed";
+      sens.status.textContent = err.message;
+    }
+    poll();
+  }
+
+  if (sens.slider) {
+    sens.slider.addEventListener("pointerdown", () => {
+      sensHolding = true;
+    });
+    window.addEventListener("pointerup", () => {
+      if (sensHolding) sensTouched = Date.now();
+      sensHolding = false;
+    });
+    window.addEventListener("pointercancel", () => {
+      sensHolding = false;
+    });
+    sens.slider.addEventListener("input", () => {
+      sensTouched = Date.now();
+      sens.out.textContent = sens.slider.value;
+      sens.card.dataset.state = "idle";
+      sens.status.textContent = "";
+    });
+    sens.slider.addEventListener("change", () => {
+      saveSensitivity(Number(sens.slider.value));
+    });
+    sens.reset.addEventListener("click", () => {
+      sens.slider.value = sensDefault;
+      sens.out.textContent = String(sensDefault);
+      saveSensitivity(sensDefault);
+    });
+  }
 
   poll();
 })();

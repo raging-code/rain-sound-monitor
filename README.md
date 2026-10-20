@@ -166,3 +166,14 @@ The **Calibration** section at the bottom of the dashboard has two buttons.
 Rain is shown as Dry, Drizzle, Raining or Heavy rain. The moisture percentage where each level starts is set by RAIN_LEVELS in config.py (default 10 %, 35 % and 65 %).
 
 If a calibration fails (room too loud, pad wet, readings unstable) nothing is saved and the page says why. **Reset** goes back to the defaults in config.py. The saved values survive a restart.
+
+
+## 10. Sound sensitivity
+
+The **Sound: sensitivity** slider in the Calibration section decides how easily a sound counts as loud.
+
+- Move it **right** if claps or speech are not picked up (quieter sounds read higher and trigger "Loud" sooner).
+- Move it **left** if everyday noise keeps setting it off.
+- **Reset** goes back to the middle (50), which uses SOUND_FULL_SCALE from config.py as it is.
+
+The text under the slider shows the sound swing where "Loud" starts and the swing that reads 100 %. The slider works together with **Calibrate sound** (the quiet level stays at 0 %) and with the **Sound threshold** slider in Controls (the percentage that counts as loud). The range of the slider is set by SOUND_SENSITIVITY_MAX_GAIN in config.py (default 4, meaning from 4 times less to 4 times more sensitive). The setting is saved and survives a restart.

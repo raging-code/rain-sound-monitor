@@ -108,3 +108,33 @@
     padding: 22px;
   }
 }
+
+/* Sound sensitivity card */
+.cal-sens {
+  grid-column: 1 / -1;
+}
+
+.cal-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cal-head output {
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.sens-control {
+  max-width: 720px;
+}
+
+.sens-ends {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  color: var(--slate);
+  font-size: 0.95rem;
+}

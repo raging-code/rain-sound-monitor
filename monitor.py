@@ -99,6 +99,12 @@ class Monitor:
                 if not 1 <= value <= 99:
                     raise ValueError("sound_threshold must be between 1 and 99.")
                 clean[key] = int(round(value))
+            elif key == "sound_sensitivity":
+                if isinstance(value, bool) or not isinstance(value, (int, float)):
+                    raise ValueError("sound_sensitivity must be a number.")
+                if not 1 <= value <= 100:
+                    raise ValueError("sound_sensitivity must be between 1 and 100.")
+                clean[key] = int(round(value))
             elif key == "led_mode":
                 if value not in LED_MODES:
                     raise ValueError("led_mode must be auto, on or off.")
@@ -170,13 +176,30 @@ class Monitor:
                 out[kind] = info
             out["sound"]["baseline"] = self.settings.get("sound_baseline") or 0.0
             out["sound"]["calibrated_at"] = self.settings.get("sound_calibrated_at")
-            out["sound"]["full_scale"] = config.SOUND_FULL_SCALE
+            baseline = self.settings.get("sound_baseline") or 0.0
+            full_scale = self._sound_full_scale(self.settings)
+            out["sound"]["full_scale"] = round(full_scale)
+            out["sound"]["sensitivity"] = int(self.settings.get("sound_sensitivity", 50))
+            out["sound"]["default_sensitivity"] = config.DEFAULT_SETTINGS["sound_sensitivity"]
+            out["sound"]["loud_swing"] = round(
+                baseline + self.settings["sound_threshold"] / 100.0 * (full_scale - baseline)
+            )
             out["rain"]["dry"] = self.settings.get("rain_dry_raw") or config.RAIN_DRY_RAW
             out["rain"]["calibrated_at"] = self.settings.get("rain_calibrated_at")
             out["rain"]["default_dry"] = config.RAIN_DRY_RAW
             out["rain"]["wet"] = config.RAIN_WET_RAW
             out["rain"]["levels"] = [{"name": n, "from": p} for n, p in config.RAIN_LEVELS]
         return out
+
+    def _sound_full_scale(self, settings):
+        """Swing (ADC counts) that reads 100 %, after the sensitivity slider."""
+        return calibration.effective_full_scale(
+            config.SOUND_FULL_SCALE,
+            settings.get("sound_sensitivity"),
+            settings.get("sound_baseline") or 0.0,
+            config.SOUND_SENSITIVITY_MAX_GAIN,
+            config.SOUND_MIN_SPAN,
+        )
 
     def _calibrate(self, raw, settings, now):
         """Feed the running calibration, then turn raw readings into calibrated percentages."""
@@ -196,7 +219,7 @@ class Monitor:
 
         if swing is not None:
             raw["sound_level"] = calibration.sound_percent(
-                swing, settings.get("sound_baseline") or 0.0, config.SOUND_FULL_SCALE
+                swing, settings.get("sound_baseline") or 0.0, self._sound_full_scale(settings)
             )
         if rain_raw is not None:
             dry = settings.get("rain_dry_raw") or config.RAIN_DRY_RAW

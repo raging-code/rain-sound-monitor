@@ -57,6 +57,11 @@ BUZZER_ACTIVE_HIGH = True      # set False for "low level trigger" buzzer module
 SOUND_FULL_SCALE = 300
 SOUND_WINDOW_S = 0.05          # how long each sound sample window lasts
 
+# Sensitivity slider (Calibration section of the web page): 1-100, 50 = SOUND_FULL_SCALE as is.
+# At 100 the sensor reacts this many times more easily, at 0 this many times less easily.
+SOUND_SENSITIVITY_MAX_GAIN = 4.0
+SOUND_MIN_SPAN = 10            # the 100 % level always stays at least this far above the quiet level
+
 # Rain: AO is high when dry and drops when wet.
 RAIN_DRY_RAW = 1000            # ADC reading of the dry sensor  -> 0 % moisture
 RAIN_WET_RAW = 300             # ADC reading of a fully wet sensor -> 100 % moisture
@@ -92,6 +97,7 @@ RAIN_LEVEL_HYSTERESIS = 4      # percent a reading must fall below a level befor
 DEFAULT_SETTINGS = {
     "alerts_enabled": True,    # buzzer on/off
     "sound_threshold": 40,     # 1-99, percent
+    "sound_sensitivity": 50,   # 1-100, 50 = use SOUND_FULL_SCALE as it is
     "led_mode": "auto",        # "auto", "on" or "off"
     "sound_baseline": 0.0,        # saved by "Calibrate sound" (ADC counts, 0 = not calibrated)
     "sound_calibrated_at": None,

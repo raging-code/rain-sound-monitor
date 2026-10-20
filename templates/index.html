@@ -132,6 +132,23 @@
             <button type="button" data-cal-reset>Reset</button>
           </div>
         </div>
+
+        <div class="cal-card cal-sens" id="cal-sensitivity" data-state="idle">
+          <div class="cal-head">
+            <h3 id="sens-title">Sound: sensitivity</h3>
+            <output id="sensitivity-out" for="sensitivity">50</output>
+          </div>
+          <p class="cal-help">Decide how easily a sound counts as loud. Move right if clapping or talking is not picked up. Move left if everyday noise sets it off.</p>
+          <div class="sens-control">
+            <input type="range" id="sensitivity" min="1" max="100" step="1" value="50" aria-labelledby="sens-title" aria-describedby="sens-note">
+            <div class="sens-ends" aria-hidden="true"><span>Less sensitive</span><span>More sensitive</span></div>
+          </div>
+          <p class="cal-status" id="sens-status" role="status" aria-live="polite"></p>
+          <p class="cal-saved" id="sens-note"></p>
+          <div class="cal-actions">
+            <button type="button" id="sens-reset">Reset</button>
+          </div>
+        </div>
       </div>
       <p class="cal-levels" id="cal-levels"></p>
     </section>

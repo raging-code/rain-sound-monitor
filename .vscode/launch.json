@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Dashboard (simulated data)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/app.py",
+      "console": "integratedTerminal",
+      "env": { "SENSOR_MODE": "mock" }
+    },
+    {
+      "name": "Dashboard (auto: real sensors on the Pi)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/app.py",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Hardware check (Pi only)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/test_hardware.py",
+      "console": "integratedTerminal"
+    }
+  ]
+}

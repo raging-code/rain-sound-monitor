@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Environment monitor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="top">
+    <h1>Environment monitor</h1>
+    <p class="status" id="status" data-state="connecting">
+      <span class="dot" aria-hidden="true"></span>
+      <span id="status-text">Connecting</span>
+    </p>
+  </header>
+
+  <p class="notice" id="notice" role="alert" hidden></p>
+
+  <main>
+    <section class="readouts" aria-label="Live readings">
+      <article class="readout" id="sound-panel" data-state="offline">
+        <h2>Sound</h2>
+        <p class="big"><span id="sound-value">–</span><span class="unit" id="sound-unit">%</span></p>
+        <p class="small" id="sound-state">Offline</p>
+        <div class="meter" aria-hidden="true">
+          <div class="fill" id="sound-fill"></div>
+          <div class="tick" id="sound-tick"></div>
+        </div>
+      </article>
+
+      <article class="readout" id="rain-panel" data-state="offline">
+        <h2>Rain</h2>
+        <p class="big" id="rain-state">Offline</p>
+        <p class="small" id="rain-moisture">&nbsp;</p>
+        <div class="meter" aria-hidden="true">
+          <div class="fill" id="rain-fill"></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="history" aria-label="History">
+      <div class="history-bar">
+        <div class="seg" role="radiogroup" aria-label="Time range">
+          <label><input type="radio" name="range" value="live" checked><span>Live</span></label>
+          <label><input type="radio" name="range" value="1h"><span>1 hour</span></label>
+          <label><input type="radio" name="range" value="24h"><span>24 hours</span></label>
+        </div>
+        <a class="link" href="/api/export.csv" download>Download CSV</a>
+      </div>
+
+      <div class="charts">
+        <figure>
+          <figcaption>Sound level</figcaption>
+          <div class="chart-box"><canvas id="sound-chart" role="img" aria-label="Sound level over time"></canvas></div>
+        </figure>
+        <figure>
+          <figcaption>Rain</figcaption>
+          <div class="chart-box"><canvas id="rain-chart" role="img" aria-label="Rain and moisture over time"></canvas></div>
+        </figure>
+      </div>
+    </section>
+
+    <section class="lower">
+      <div class="controls">
+        <h2>Controls</h2>
+
+        <label class="row switch" for="alerts">
+          <span class="label-text">Buzzer alerts <span class="lamp" id="buzzer-lamp" role="img" aria-label="Buzzer off"></span></span>
+          <input type="checkbox" id="alerts">
+          <span class="track" aria-hidden="true"></span>
+        </label>
+
+        <div class="row column">
+          <div class="row-head">
+            <label for="threshold">Sound threshold</label>
+            <output id="threshold-out" for="threshold">40</output>
+          </div>
+          <input type="range" id="threshold" min="1" max="99" step="1" value="40">
+        </div>
+
+        <div class="row" role="group" aria-labelledby="led-label">
+          <span class="label-text" id="led-label">LED <span class="lamp" id="led-lamp" role="img" aria-label="LED off"></span></span>
+          <div class="seg">
+            <label><input type="radio" name="led" value="auto" checked><span>Auto</span></label>
+            <label><input type="radio" name="led" value="on"><span>On</span></label>
+            <label><input type="radio" name="led" value="off"><span>Off</span></label>
+          </div>
+        </div>
+
+        <div class="row buttons">
+          <button type="button" id="test-buzzer">Test buzzer</button>
+          <span class="mock-buttons" id="mock-buttons" hidden>
+            <button type="button" data-mock="clap">Simulate clap</button>
+            <button type="button" data-mock="rain">Simulate rain</button>
+          </span>
+        </div>
+      </div>
+
+      <div class="events">
+        <h2>Recent events</h2>
+        <ul id="events"></ul>
+        <p class="empty" id="events-empty">Nothing yet</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/chart.umd.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
